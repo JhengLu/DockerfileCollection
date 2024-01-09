@@ -17,6 +17,7 @@ RUN apt-get update && \
         zlib1g-dev \
         libssl-dev \
         vim \
+        numactl \
         git && \
     rm -rf /var/lib/apt/lists/*
 

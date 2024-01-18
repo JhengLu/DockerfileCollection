@@ -18,6 +18,7 @@ RUN apt-get update && \
         libssl-dev \
         vim \
         numactl \
+        mpich \
         git && \
     rm -rf /var/lib/apt/lists/*
 

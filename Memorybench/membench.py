@@ -3,6 +3,12 @@ import sys
 import string
 import random
 import argparse
+from multiprocessing import Pool, Manager
+
+def store_data(q):
+    key = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
+    value = os.urandom(int(1e9)) # creates a 1GB data
+    q[key] = value
 
 # create a parser object
 parser = argparse.ArgumentParser()
@@ -13,15 +19,19 @@ parser.add_argument('--size', type=int, help='The size of data you want to store
 # parse the arguments
 args = parser.parse_args()
 
-# create an empty dictionary to store your data in
-my_data = {}
+# create manager object and dictionary
+manager = Manager()
+my_data = manager.dict()
 
-# generate a random key-value pairs and store them in the dictionary
-for i in range(args.size * (10**6)):  
-    # create a 1KB data
-    key = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
-    value = os.urandom(1024) # creates a 1KB data
-    my_data[key] = value
+# specify pool size equal to the number of cores
+pool = Pool()
+
+# generate random key-value pairs and store them in the dictionary
+for _ in range(args.size):  # we just loop size times now since every record is 1GB
+    pool.apply_async(store_data, args=(my_data,))
+
+pool.close()
+pool.join()
 
 # check memory usage of the dictionary
 print('Memory size of my_data: ', sys.getsizeof(my_data) / (1024**3), 'GB') # prints the size in GB

@@ -7,7 +7,7 @@ from multiprocessing import Pool, Manager
 
 def store_data(q):
     key = ''.join(random.choices(string.ascii_letters + string.digits, k=100))
-    value = os.urandom(int(1e9)) # creates a 1GB data
+    value = os.urandom(1024) # creates a 1KB data
     q[key] = value
 
 # create a parser object
@@ -27,7 +27,7 @@ my_data = manager.dict()
 pool = Pool()
 
 # generate random key-value pairs and store them in the dictionary
-for _ in range(args.size):  # we just loop size times now since every record is 1GB
+for _ in range(args.size * (10**6)):  # multiply size by 10^6 since each data block is 1KB
     pool.apply_async(store_data, args=(my_data,))
 
 pool.close()

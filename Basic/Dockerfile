@@ -19,6 +19,7 @@ RUN apt-get update && \
         vim \
         numactl \
         mpich \
+        libtool \
         git && \
     rm -rf /var/lib/apt/lists/*
 

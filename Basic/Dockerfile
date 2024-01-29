@@ -20,6 +20,7 @@ RUN apt-get update && \
         numactl \
         mpich \
         libtool \
+        redis-server \
         git && \
     rm -rf /var/lib/apt/lists/*
 
